@@ -253,9 +253,9 @@ trait CommandProcessing extends Actor {
    * strings, for consistency with Redis' INCRBYFLOAT/HINCRBYFLOAT commands
    * and sorted set scores.
    */
-  def numberToString(n: Any): String = {
-    val s = n.toString
-    if (s.takeRight(2) == ".0") s.dropRight(2) else s
+  def numberToString[T: Numeric](number: T): String = {
+    val intRepr: Int = implicitly[Numeric[T]].toInt(number)
+    if (intRepr == number) intRepr.toString else number.toString
   }
 
   /**
